@@ -1,0 +1,117 @@
+<ui:composition template="/WEB-INF/template/layoutpadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<ui:define name="titulo">Pesquisar Usuarios</ui:define>
+
+	<ui:define name="corpo">
+		<h:form id="frmPesquisa">
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<h1>Pesquisa Usuario</h1>
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:messages autoUpdate="true" closable="true" />
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" id="botaoPesquisar"
+						action="#{pesquisaUsuariosBean.pesquisar}" update="@form" />
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Novo" outcome="/usuarios/cadastrousuario" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo">
+
+				<p:outputLabel value="E-MAIL" for="email" />
+				<p:inputText id="email" value="#{pesquisaUsuariosBean.filtro.email}"
+					size="60" />
+
+				<p:outputLabel value="IDENTIDADE" for="identidade" />
+				<p:inputText id="identidade"
+					value="#{pesquisaUsuariosBean.filtro.identidade}" size="15" />
+
+			</p:panelGrid>
+
+			<p:dataTable id="usuariosTable"
+				value="#{pesquisaUsuariosBean.usuariosFiltrados}" var="usuario"
+				style="margin-top: 20px" emptyMessage="Nenhum usuario encontrado."
+				rows="20" paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom">
+				<p:column headerText="GRUPO" style="text-align: center; width: 80px">
+					<h:outputText value="#{usuario.grupo.descricao}" />
+				</p:column>
+
+				<p:column headerText="POSTO" style="text-align: center; width: 80px">
+					<h:outputText value="#{usuario.postoGraduacao.descricao}" />
+				</p:column>
+
+				<p:column headerText="STATUS"
+					style="text-align: center; width: 80px">
+					<h:outputText value="#{usuario.status.descricao}" />
+				</p:column>
+
+				<p:column headerText="IDENTIDADE"
+					style="text-align: center; width: 100px">
+					<h:outputText value="#{usuario.identidade}" />
+				</p:column>
+
+				<p:column headerText="NOME">
+					<h:outputText value="#{usuario.nome}" />
+				</p:column>
+
+				<p:column headerText="E-MAIL">
+					<h:outputText value="#{usuario.email}" />
+				</p:column>
+
+				<p:column headerText="DATA CADASTRO"
+					style="text-align: center; width: 100px">
+					<h:outputText value="#{usuario.dataCadastro}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column style="text-align: center; width: 100px">
+					<p:button icon="ui-icon-pencil" title="Editar"
+						outcome="/usuarios/editausuario">
+						<f:param name="usuario" value="#{usuario.id}" />
+					</p:button>
+
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						onclick="PF('confirmacaoExclusao').show();"
+						 process="@this">
+						<f:setPropertyActionListener
+							target="#{pesquisaUsuariosBean.usuarioSelecionado}"
+							value="#{usuario}" />
+					</p:commandButton>
+
+					<p:confirmDialog header="Exclusão de produto"
+						message="Tem certeza que deseja excluir o usuario #{pesquisaUsuariosBean.usuarioSelecionado.nome} ?"
+						widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+						<p:button value="Não"
+							onclick="PF('confirmacaoExclusao').hide(); return false;" />
+						<p:commandButton value="Sim"
+							onclick="PF('confirmacaoExclusao').hide();"
+							action="#{pesquisaUsuariosBean.excluir}" process="@this"
+							update="usuariosTable" />
+					</p:confirmDialog>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog header="Bloqueio de Usuario"
+				message="Tem certeza que deseja bloquear usuario?"
+				widgetVar="confirmaBloqueio">
+				<p:button value="Nao"
+					onclick="confirmaBloqueio.hide(); return false;" />
+				<p:commandButton value="Sim" oncomplete="confirmaBloqueio.hide();" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

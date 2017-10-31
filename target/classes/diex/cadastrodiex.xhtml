@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Cadastro de DIEx</title>
+
+	<h:outputStylesheet library="css" name="sistema.css" />
+</h:head>
+<h:body>
+	<f:metadata>
+		<f:viewParam name="dunmy" />
+		<f:event listener="#{cadastroDiexBean.inicializar}"
+				type="preRenderView" />
+	</f:metadata>
+	<h:form id="fmr3">
+		<p:toolbar style="margin-top: 20px">
+			<p:toolbarGroup>
+				<h1>Cadastro de DIEx</h1>
+			</p:toolbarGroup>
+		</p:toolbar>
+		<h:panelGroup id="inclusaoDiex">
+			<p:messages autoUpdate="true" closable="true" />
+			<p:panelGrid columns="2" id="paineldiex"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo">
+				<p:outputLabel value="OM" for="om" />
+				<p:selectOneMenu id="om" value="#{cadastroDiexBean.diex.om}"
+					filter="true">
+					<f:selectItem itemLabel="Selecione uma OM" />
+					<f:selectItems value="#{cadastroDiexBean.oms}" var="oms"
+						itemValue="#{oms}" itemLabel="#{oms.nome}" />
+				</p:selectOneMenu>
+				<p:outputLabel value="Descricao" />
+				<p:inputText id="descricao"
+					value="#{cadastroDiexBean.diex.descricao}" size="50" maxlength="50"
+					required="true"
+					requiredMessage="Por favor, informe a descricao do DIEx." />
+			</p:panelGrid>
+			<p:toolbar style="margin-top: 10px">
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" update="inclusaoDiex"
+						id="botaoSalvarDiex" action="#{cadastroDiexBean.salvar}" />
+				</p:toolbarGroup>
+			</p:toolbar>
+		</h:panelGroup>
+	</h:form>
+</h:body>
+</html>

@@ -1,0 +1,134 @@
+<ui:composition template="/WEB-INF/template/layoutpadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisar Contas</ui:define>
+
+	<ui:define name="corpo">
+		<f:metadata>
+			<f:viewParam name="dunmy" />
+			<f:event listener="#{pesquisaContasBean.inicializar}"
+				type="preRenderView" />
+		</f:metadata>
+		<h:form>
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<h1>Pesquisa Contas</h1>
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:messages autoUpdate="true" closable="true" />
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" id="botaoPesquisar"
+						action="#{pesquisaContasBean.pesquisar}" update="@form" />
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Novo" outcome="/contas/cadastroconta" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+
+				<p:outputLabel value="OM" for="om" />
+				<p:selectOneMenu id="om" value="#{pesquisaContasBean.filtro.om}">
+					<f:selectItem itemLabel="Selecione uma OM" />
+					<f:selectItems value="#{pesquisaContasBean.oms}" var="oms"
+						itemValue="#{oms}" itemLabel="#{oms.nome}" />
+				</p:selectOneMenu>
+
+
+				<p:outputLabel value="NOME" for="nome" />
+				<p:inputText id="nome" size="50"
+					value="#{pesquisaContasBean.filtro.nome}" />
+
+				<p:outputLabel value="IDENTIDADE" for="identidade" />
+				<p:inputText id="identidade" size="15"
+					value="#{pesquisaContasBean.filtro.identidade}" />
+
+			</p:panelGrid>
+
+			<p:dataTable id="contasTable"
+				value="#{pesquisaContasBean.contasFiltradas}" var="conta"
+				style="margin-top: 20px" emptyMessage="Nenhuma conta encontrada."
+				rows="20" paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom">
+
+				<p:column headerText="OM" style="text-align: center; width: 100px">
+					<h:outputText value="#{conta.om.nome}" />
+				</p:column>
+
+				<p:column headerText="CIDADE"
+					style="text-align: center; width: 100px">
+					<h:outputText value="#{conta.om.cidade.nome}" />
+				</p:column>
+
+				<p:column headerText="IDENTIDADE"
+					style="text-align: center; width: 100px">
+					<h:outputText value="#{conta.identidade}" />
+				</p:column>
+
+				<p:column headerText="NOME">
+					<h:outputText value="#{conta.nome}" />
+				</p:column>
+
+				<p:column headerText="POSTO"
+					style="text-align: center; width: 100px">
+					<h:outputText value="#{conta.postoGraduacao.descricao}" />
+				</p:column>
+
+				<p:column headerText="SENHA"
+					style="text-align: center; width: 100px">
+					<h:outputText value="#{conta.senha}" />
+				</p:column>
+
+
+				<p:column headerText="DIEx" style="text-align: center; width: 100px">
+					<h:outputText value="#{conta.diex.descricao}" />
+				</p:column>
+
+				<p:column headerText="DATA CADASTRO"
+					style="text-align: center; width: 100px">
+					<h:outputText value="#{conta.dataCadastro}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column style="text-align: center; width: 100px">
+					<p:button icon="ui-icon-pencil" title="Editar"
+						outcome="/contas/editaconta">
+						<f:param name="conta" value="#{conta.id}" />
+					</p:button>
+
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						onclick="PF('confirmacaoExclusao').show();" process="@this">
+						<f:setPropertyActionListener
+							target="#{pesquisaContasBean.contaSelecionada}" value="#{conta}" />
+					</p:commandButton>
+
+					<p:confirmDialog header="Exclusão de Conta"
+						message="Tem certeza que deseja excluir a conta? "
+						widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+						<p:button value="Não"
+							onclick="PF('confirmacaoExclusao').hide(); return false;" />
+						<p:commandButton value="Sim"
+							onclick="PF('confirmacaoExclusao').hide();"
+							action="#{pesquisaContasBean.excluir}" process="@this"
+							update="contasTable" />
+					</p:confirmDialog>
+				</p:column>
+			</p:dataTable>
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup style="margin-left: 40px ">
+					<p:outputLabel value="TOTAL DE CONTAS "/>
+					<p:outputLabel/>
+					<h:outputText value="#{pesquisaContasBean.total}"/>
+				</p:toolbarGroup>
+			</p:toolbar>
+		</h:form>
+	</ui:define>
+</ui:composition>

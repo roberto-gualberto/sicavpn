@@ -1,0 +1,120 @@
+<ui:composition template="/WEB-INF/template/layoutpadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Nova conta</ui:define>
+
+	<ui:define name="corpo">
+		<f:metadata>
+			<f:viewParam name="dunmy" />
+			<f:event listener="#{cadastroContaBean.inicializar}"
+				type="preRenderView" />
+		</f:metadata>
+		<h:form id="fmr1">
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<h1>Nova Conta</h1>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:messages autoUpdate="true" closable="true" />
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:button value="Nova" />
+					<p:commandButton value="Salvar" id="botaoSalvar"
+						action="#{cadastroContaBean.salvar}" />
+					<p:commandButton value="Novo DIEx" type="button"
+						action="#{cadastroDiexBean.abrirDialogo}"/>
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisar" outcome="/contas/pesquisacontas" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo">
+
+				<p:outputLabel value="CADASTRANDO" for="cadastrarcom"/>
+				<p:selectOneMenu id="cadastrarcom"
+					value="#{cadastroContaBean.conta.usuario}">
+					<f:selectItems value="#{cadastroContaBean.usuario}"
+						var="cadastrarcom" itemValue="#{cadastrarcom}"
+						itemLabel="#{cadastrarcom.nome}" />
+					
+				</p:selectOneMenu>
+				
+				<p:outputLabel value="OM" for="om" />
+				<p:selectOneMenu id="om" value="#{cadastroContaBean.conta.om}"
+					filter="true">
+					<f:selectItem itemLabel="Selecione uma OM" />
+					<f:selectItems value="#{cadastroContaBean.oms}" var="oms"
+						itemValue="#{oms}" itemLabel="#{oms.nome}" />
+					<p:ajax listener="#{cadastroContaBean.carregarDiexs}" update="diex" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="POSTO" for="posto" />
+				<p:selectOneMenu id="posto"
+					value="#{cadastroContaBean.conta.postoGraduacao}">
+					<f:selectItem itemLabel="Selecione um Posto" />
+					<f:selectItems value="#{cadastroContaBean.postosGraduacaos}"
+						var="posto" itemValue="#{posto}" itemLabel="#{posto.descricao}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="NOME" for="nome" />
+				<p:inputText id="nome" size="50" maxlength="60"
+					value="#{cadastroContaBean.conta.nome}" />
+
+				<p:outputLabel value="IDENTIDADE" for="identidade" />
+				<p:inputText id="identidade" size="12" maxlength="10"
+					value="#{cadastroContaBean.conta.identidade}" />
+
+				<p:outputLabel value="SENHA" for="senha" />
+
+				<p:inputText id="senha" value="#{cadastroContaBean.conta.senha}"
+					size="12" maxlength="10" />
+
+				<p:outputLabel value="DIEx" for="diex" />
+				<p:selectOneMenu id="diex" value="#{cadastroContaBean.conta.diex}">
+					<f:selectItem itemLabel="Selecione o DIEx" />
+					<f:selectItems value="#{cadastroContaBean.diexs}" var="diex"
+						itemValue="#{diex}" itemLabel="#{diex.descricao}" />
+				</p:selectOneMenu>
+			</p:panelGrid>
+		</h:form>
+		<h:form id="fmr2">
+			<p:dialog header="Cadastro de DIEx" widgetVar="cadastroDiex" onClose="true" update="diex"
+				resizable="false" modal="true" height="210px">
+				<p:ajax update="fmr2" />
+				<h:panelGroup id="inclusaoDiex">
+					<p:messages autoUpdate="true" closable="true" />
+					<p:panelGrid columns="2" id="paineldiex"
+						style="width: 100%; margin-top: 20px" columnClasses="rotulo">
+						<p:outputLabel value="OM" for="om" />
+						<p:selectOneMenu id="om"
+							value="#{cadastroDiexBean.diex.om}" filter="true">
+							<f:selectItem itemLabel="Selecione uma OM" />
+							<f:selectItems value="#{cadastroDiexBean.oms}" var="oms"
+								itemValue="#{oms}" itemLabel="#{oms.nome}" />
+						</p:selectOneMenu>
+						<p:outputLabel value="Descricao" />
+						<p:inputText id="descricao"
+							value="#{cadastroDiexBean.diex.descricao}" size="50"
+							maxlength="50" required="true"
+							requiredMessage="Por favor, informe a descricao do DIEx." />
+					</p:panelGrid>
+					<p:toolbar style="margin-top: 10px">
+						<p:toolbarGroup>
+							<p:commandButton value="Salvar" update="inclusaoDiex"
+								id="botaoSalvarDiex" action="#{cadastroDiexBean.salvar}" />
+						</p:toolbarGroup>
+					</p:toolbar>
+				</h:panelGroup>
+			</p:dialog>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

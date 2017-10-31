@@ -1,0 +1,87 @@
+<ui:composition template="/WEB-INF/template/layoutpadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisar OM</ui:define>
+
+	<ui:define name="corpo">
+		<f:metadata>
+			<f:viewParam name="dunmy" />
+			<f:event listener="#{pesquisaOmBean.inicializar}"
+				type="preRenderView" />
+		</f:metadata>
+		<h:form>
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<h1>Pesquisa OM</h1>
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" id="botaoPesquisar"
+						action="#{pesquisaOmBean.pesquisar}" update="@form" />
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Novo" outcome="/om/cadastroom" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+
+				<p:outputLabel value="ESTADO" for="estado" />
+				<p:selectOneMenu id="estado" value="#{pesquisaOmBean.filtro.estado}">
+					<f:selectItem itemLabel="Selecione um Estado" />
+					<f:selectItems value="#{pesquisaOmBean.estados}" var="estados"
+						itemValue="#{estados}" itemLabel="#{estados.nome}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="NOME" for="nome" />
+				<p:inputText id="nome" size="50"
+					value="#{pesquisaOmBean.filtro.nome}" />
+			</p:panelGrid>
+
+			<p:dataTable id="omTable"
+				value="#{pesquisaOmBean.omFiltradas}" var="om"
+				style="margin-top: 20px" emptyMessage="Nenhuma Om encontrada."
+				rows="10" paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom">
+
+				<p:column headerText="ESTADO"
+					style="text-align: center; width: 100px">
+					<h:outputText value="#{om.estado.nome}" />
+				</p:column>
+
+				<p:column headerText="CIDADE"
+					style="text-align: center; width: 100px">
+					<h:outputText value="#{om.cidade.nome}" />
+				</p:column>
+
+				<p:column headerText="OM" style="text-align: center; width: 100px">
+					<h:outputText value="#{om.nome}" />
+				</p:column>
+
+				<p:column style="text-align: center; width: 100px">
+					<p:button icon="ui-icon-pencil" title="Editar"
+						outcome="/om/editaom">
+						<f:param name="om" value="#{om.id}" />
+					</p:button>
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="confirmaExclusao.show();" />
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog header="Exclusao de Conta"
+				message="Tem certeza que deseja excluir a conta?"
+				widgetVar="confirmaExclusao">
+				<p:button value="Nao"
+					onclick="confirmaExclusao.hide(); return false;" />
+				<p:commandButton value="Sim" oncomplete="confirmaExclusao.hide();" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

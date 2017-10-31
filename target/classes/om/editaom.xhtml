@@ -1,0 +1,61 @@
+<ui:composition template="/WEB-INF/template/layoutpadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="titulo">Edicao de OM</ui:define>
+	<ui:define name="corpo">
+		<f:metadata>
+			<o:viewParam name="om" value="#{cadastroOmBean.om}" />
+			<f:event listener="#{cadastroOmBean.edicaoOm}"
+				type="preRenderView" />
+		</f:metadata>
+		<h:form id="fmr3">
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<h1>Edicao de OM</h1>
+				</p:toolbarGroup>
+			</p:toolbar>
+			<h:panelGroup id="inclusaoom">
+				<p:messages autoUpdate="true" closable="true" />
+				<p:toolbar style="margin-top: 20px">
+					<p:toolbarGroup>
+						<p:button value="Nova" outcome="/om/cadastroom" />
+						<p:commandButton value="Salvar" id="botaoSalvarOm"
+							action="#{cadastroOmBean.salvar}" />
+					</p:toolbarGroup>
+					<p:toolbarGroup align="right">
+						<p:button value="Pesquisar" outcome="/om/pesquisaom" />
+					</p:toolbarGroup>
+				</p:toolbar>
+				<p:panelGrid columns="2" id="painel"
+					style="width: 100%; margin-top: 20px" columnClasses="rotulo">
+					<p:outputLabel value="ESTADO" for="estado" />
+					<p:selectOneMenu id="estado" value="#{cadastroOmBean.om.estado}">
+						<f:selectItem itemLabel="Selecione um Estado" />
+						<f:selectItems value="#{cadastroOmBean.estados}" var="estados"
+							itemValue="#{estados}" itemLabel="#{estados.nome}" />
+						<p:ajax listener="#{cadastroOmBean.carregarCidades}"
+							update="cidade" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="CIDADE" for="cidade" />
+					<p:selectOneMenu id="cidade" value="#{cadastroOmBean.om.cidade}">
+						<f:selectItem itemLabel="Selecione a Cidade" />
+						<f:selectItems value="#{cadastroOmBean.cidades}" var="cidade"
+							itemValue="#{cidade}" itemLabel="#{cidade.nome}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="NOME" for="nome" />
+					<p:inputText id="nome" size="30" maxlength="30"
+						value="#{cadastroOmBean.om.nome}" />
+					<p:outputLabel value="NUMERO DE CONTAS" for="numerocontas" />
+					<p:inputText id="numerocontas" size="4" maxlength="2"
+						value="#{cadastroOmBean.om.numeroContas}" />
+				</p:panelGrid>
+			</h:panelGroup>
+		</h:form>
+	</ui:define>
+</ui:composition>
